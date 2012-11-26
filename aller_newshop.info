@@ -1,0 +1,4 @@
+name = Aller New Shop
+description = Helper module for new shops cloning on the Aller platform.
+core = 7.x
+files[] = aller_newshop.module
