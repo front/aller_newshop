@@ -4,3 +4,50 @@
  * @file
  * Helper module for new shops cloning on the Aller platform.
  */
+
+function aller_newshop_clone_shop($shop_name) {
+  $sites_path = realpath(dirname(__FILE__) . "/../../../../");
+
+  $site_path = $sites_path . "/" . $shop_name;
+  $template_path = realpath(dirname(__FILE__) . "/template");
+
+  if (!is_dir($site_path)) {
+    mkdir($site_path);
+
+    $objects = new RecursiveIteratorIterator(
+               new RecursiveDirectoryIterator($template_path),
+               RecursiveIteratorIterator::SELF_FIRST);
+
+    $copy_paths = array();
+
+    foreach($objects as $name => $object) {
+      $destionation_name = new stdClass();
+      $destionation_name->path = $site_path . str_replace($template_path, '', $name);
+      $destionation_name->path = str_replace('SHOP_NAME', $shop_name, $destionation_name->path);
+      $destionation_name->content = file_get_contents($name);
+      $destionation_name->content = str_replace('SHOP_NAME', $shop_name, $destionation_name->content);
+
+      $copy_paths[$name] = $destionation_name;
+    }
+
+    $errors = aller_newshop_apply_directories($copy_paths);
+  }
+}
+
+function aller_newshop_apply_directories($paths) {
+  $errors = array();
+  foreach ($paths as $source_path => $destionation_path) {
+    if (is_dir($source_path)) {
+      mkdir($destionation_path->path);
+    }
+    elseif (is_file($source_path) && isset($destionation_path->content)) {
+      if (isset($destionation_path->content)) {
+        file_put_contents($destionation_path->path, $destionation_path->content);
+      }
+      else {
+        copy($source_path, $destionation_path->path);
+      }
+    }
+  }
+  return $errors;
+}
