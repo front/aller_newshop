@@ -9,16 +9,16 @@ function aller_newshop_menu() {
   $items = array();
   $items['test/clone'] = array(
     'title' => 'Clone shop',
-    'page callback' => 'aller_newshop_clone_shop_form',
-    'type' => MENU_CALLBACK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('aller_newshop_clone_shop_form'),
     'access arguments' => array('create new users'),
   );
   return $items;
 }
 
-function aller_newshop_clone_shop_form() {
+function aller_newshop_clone_shop_form($form, &$form_state) {
   $form['shop_name'] = array(
-    '#type' => 'machine_name',
+    '#type' => 'textfield',
     '#title' => 'Shop name',
   );
 
@@ -28,6 +28,44 @@ function aller_newshop_clone_shop_form() {
     '#value' => '/sites'
   );
 
+  $form['themes'] = array(
+    '#type' => 'select',
+    '#options' => aller_newshop_get_themes(),
+    '#title' => t('Themes'),
+    '#default_value' => 'SAT',
+    '#title_display' => TRUE,
+  );
+
+  $modules = aller_newshop_get_modules();
+
+  $form['modules_groups'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Modules'),
+  );
+
+  foreach ($modules as $module) {
+    $form['modules_groups']['module_' . $module] = array(
+      '#type' => 'checkbox',
+      '#title' => $module,
+      '#default_value' => FALSE,
+    );
+  }
+
+  $features = aller_newshop_get_features();
+
+  $form['features_groups'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Features'),
+  );
+
+  foreach ($features as $feature) {
+    $form['features_groups']['feature_' . $feature] = array(
+      '#type' => 'checkbox',
+      '#title' => $feature,
+      '#default_value' => FALSE,
+    );
+  }
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -35,18 +73,82 @@ function aller_newshop_clone_shop_form() {
   return $form;
 }
 
-function aller_newshop_clone_shop_form_validate($form, &$form_state) {
-  $sites_path = realpath(DRUPAL_ROOT . $root);
-}
-
-function aller_newshop_clone_shop_form_submit($form, &$form_state) {
-  $sites_path = realpath(DRUPAL_ROOT . $root);
+function aller_newshop_clone_shop_form_submit(&$form, &$form_state) {
+  $sites_path = realpath(DRUPAL_ROOT . '/' . trim($form_state['input']['directory'], '/'));
   define('ALLER_NEWSHOP_DESTINATION', $sites_path);
+
+  $variables = array();
+  $variables['SHOP_NAME'] = $form_state['input']['shop_name'];
+
+  $themes = array();
+  $modules = array();
+  $features = array();
+
+  $template_themes = aller_newshop_get_themes();
+  $themes[] = $template_themes[$form_state['input']['themes']];
+  foreach ($form_state['input'] as $key => $value) {
+    if (strpos($key, 'module_') === 0 && $value == 1) {
+      $modules[] = str_replace('module_', '', $key);
+    }
+    elseif (strpos($key, 'feature_') === 0 && $value == 1) {
+      $features[] = str_replace('feature_', '', $key);
+    }
+  }
+
+  aller_newshop_clone_themes($themes, $variables);
+  aller_newshop_clone_modules($modules, $variables);
+  aller_newshop_clone_features($features, $variables);
+
+  drupal_set_message('Shop cloned with success', $type = 'status');
 }
 
-define('ALLER_NEWSHOP_DESTINATION', DRUPAL_ROOT . '/sites/allershop');
+function aller_newshop_get_themes() {
+  $sources = aller_newshop_get_source_directories();
+
+  $dir = opendir($sources['themes']);
+
+  $return = array();
+  while (false !== ($entry = readdir($dir))) {
+    if ($entry != '.' && $entry != '..') {
+      $return[] = $entry;
+    }
+  }
+
+  return $return;
+}
+
+function aller_newshop_get_modules() {
+  $sources = aller_newshop_get_source_directories();
+
+  $dir = opendir($sources['modules']);
+
+  $return = array();
+  while (false !== ($entry = readdir($dir))) {
+    if ($entry != '.' && $entry != '..') {
+      $return[] = $entry;
+    }
+  }
+
+  return $return;
+}
+
+function aller_newshop_get_features() {
+  $sources = aller_newshop_get_source_directories();
+
+  $dir = opendir($sources['features']);
+
+  $return = array();
+  while (false !== ($entry = readdir($dir))) {
+    if ($entry != '.' && $entry != '..') {
+      $return[] = $entry;
+    }
+  }
+
+  return $return;
+}
+/*define('ALLER_NEWSHOP_DESTINATION', DRUPAL_ROOT . '/sites/allershop');
 var_dump(aller_newshop_clone_features(array('test_SHOP_NAME'), array('SHOP_NAME' => 'jegger')));
-exit();
+exit();*/
 
 function aller_newshop_clone_themes($themes, $variables) {
   if (!is_array($themes)) {
@@ -140,16 +242,21 @@ function aller_newshop_copy_directory($source, $destination, $variables) {
     }
     elseif(is_file($path)) {
       $content = file_get_contents($path);
-      $content = aller_newshop_renderize($variables, $content);
+      $content = aller_newshop_renderize($variables, $content, TRUE);
 
       file_put_contents($destination_path, $content);
     }
   }
 }
 
-function aller_newshop_renderize($variables, $content) {
+function aller_newshop_renderize($variables, $content, $safe = FALSE) {
   foreach ($variables as $key => $value) {
-    $content = str_replace($key, $value, $content);
+    if ($safe) {
+      $content = str_replace('{' . $key . '}', $value, $content);
+    }
+    else {
+      $content = str_replace($key, $value, $content);
+    }
   }
   return $content;
 }
