@@ -5,49 +5,169 @@
  * Helper module for new shops cloning on the Aller platform.
  */
 
-function aller_newshop_clone_shop($shop_name) {
-  $sites_path = realpath(dirname(__FILE__) . "/../../../../");
+function aller_newshop_menu() {
+  $items = array();
+  $items['test/clone'] = array(
+    'title' => 'Clone shop',
+    'page callback' => 'aller_newshop_clone_shop_form',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('create new users'),
+  );
+  return $items;
+}
 
-  $site_path = $sites_path . "/" . $shop_name;
-  $template_path = realpath(dirname(__FILE__) . "/template");
+function aller_newshop_clone_shop_form() {
+  $form['shop_name'] = array(
+    '#type' => 'machine_name',
+    '#title' => 'Shop name',
+  );
 
-  if (!is_dir($site_path)) {
-    mkdir($site_path);
+  $form['directory'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Directory',
+    '#value' => '/sites'
+  );
 
-    $objects = new RecursiveIteratorIterator(
-               new RecursiveDirectoryIterator($template_path),
-               RecursiveIteratorIterator::SELF_FIRST);
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
 
-    $copy_paths = array();
+function aller_newshop_clone_shop_form_validate($form, &$form_state) {
+  $sites_path = realpath(DRUPAL_ROOT . $root);
+}
 
-    foreach($objects as $name => $object) {
-      $destionation_name = new stdClass();
-      $destionation_name->path = $site_path . str_replace($template_path, '', $name);
-      $destionation_name->path = str_replace('SHOP_NAME', $shop_name, $destionation_name->path);
-      $destionation_name->content = file_get_contents($name);
-      $destionation_name->content = str_replace('SHOP_NAME', $shop_name, $destionation_name->content);
+function aller_newshop_clone_shop_form_submit($form, &$form_state) {
+  $sites_path = realpath(DRUPAL_ROOT . $root);
+  define('ALLER_NEWSHOP_DESTINATION', $sites_path);
+}
 
-      $copy_paths[$name] = $destionation_name;
+define('ALLER_NEWSHOP_DESTINATION', DRUPAL_ROOT . '/sites/allershop');
+var_dump(aller_newshop_clone_features(array('test_SHOP_NAME'), array('SHOP_NAME' => 'jegger')));
+exit();
+
+function aller_newshop_clone_themes($themes, $variables) {
+  if (!is_array($themes)) {
+    return FALSE;
+  }
+
+  $destination = ALLER_NEWSHOP_DESTINATION . '/themes';
+  if (!is_dir($destination)) {
+    return FALSE;
+  }
+
+  $directories = aller_newshop_get_source_directories();
+
+  foreach ($themes as $theme) {
+    if (!is_dir($directories['themes'] . '/' . $theme)) {
+      continue;
+    }
+    $rtheme = aller_newshop_renderize($variables, $theme);
+    if (is_dir($destination . '/' . $rtheme)) {
+      continue;
     }
 
-    $errors = aller_newshop_apply_directories($copy_paths);
+    aller_newshop_copy_directory($directories['themes'] . '/' . $theme, $destination, $variables);
   }
 }
 
-function aller_newshop_apply_directories($paths) {
-  $errors = array();
-  foreach ($paths as $source_path => $destionation_path) {
-    if (is_dir($source_path)) {
-      mkdir($destionation_path->path);
+function aller_newshop_clone_modules($modules, $variables) {
+  if (!is_array($modules)) {
+    return FALSE;
+  }
+
+  $destination = ALLER_NEWSHOP_DESTINATION . '/modules/custom';
+  if (!is_dir($destination)) {
+    return FALSE;
+  }
+
+  $directories = aller_newshop_get_source_directories();
+
+  foreach ($modules as $module) {
+    if (!is_dir($directories['modules'] . '/' . $module)) {
+      continue;
     }
-    elseif (is_file($source_path) && isset($destionation_path->content)) {
-      if (isset($destionation_path->content)) {
-        file_put_contents($destionation_path->path, $destionation_path->content);
-      }
-      else {
-        copy($source_path, $destionation_path->path);
-      }
+    $rmodule = aller_newshop_renderize($variables, $module);
+    if (is_dir($destination . '/' . $rmodule)) {
+      continue;
+    }
+
+    aller_newshop_copy_directory($directories['modules'] . '/' . $module, $destination, $variables);
+  }
+}
+
+function aller_newshop_clone_features($features, $variables) {
+  if (!is_array($features)) {
+    return FALSE;
+  }
+
+  $destination = ALLER_NEWSHOP_DESTINATION . '/modules/features';
+  if (!is_dir($destination)) {
+    return FALSE;
+  }
+
+  $directories = aller_newshop_get_source_directories();
+
+  foreach ($features as $feature) {
+    if (!is_dir($directories['features'] . '/' . $feature)) {
+      continue;
+    }
+    $rfeature = aller_newshop_renderize($variables, $feature);
+    if (is_dir($destination . '/' . $rfeature)) {
+      continue;
+    }
+
+    aller_newshop_copy_directory($directories['modules'] . '/' . $feature, $destination, $variables);
+  }
+}
+
+function aller_newshop_copy_directory($source, $destination, $variables) {
+  $name = aller_newshop_renderize($variables, basename($source));
+  $destination = $destination . '/' . $name;
+  if (!mkdir($destination)) {
+    return FALSE;
+  }
+
+  $directory_content = aller_newshop_get_all_directory($source);
+
+  foreach ($directory_content as $path => $object) {
+    $destination_path = str_replace($source, $destination, $path);
+    $destination_path = aller_newshop_renderize($variables, $destination_path);
+    if (is_dir($path)) {
+      mkdir($destination_path);
+    }
+    elseif(is_file($path)) {
+      $content = file_get_contents($path);
+      $content = aller_newshop_renderize($variables, $content);
+
+      file_put_contents($destination_path, $content);
     }
   }
-  return $errors;
+}
+
+function aller_newshop_renderize($variables, $content) {
+  foreach ($variables as $key => $value) {
+    $content = str_replace($key, $value, $content);
+  }
+  return $content;
+}
+
+function aller_newshop_get_source_directories() {
+  return array(
+    'themes' => DRUPAL_ROOT . '/' . drupal_get_path('module', 'aller_newshop') . '/templates/themes',
+    'modules' => DRUPAL_ROOT . '/' . drupal_get_path('module', 'aller_newshop') . '/templates/modules',
+    'features' => DRUPAL_ROOT . '/' . drupal_get_path('module', 'aller_newshop') . '/templates/features',
+  );
+}
+
+function aller_newshop_get_all_directory($directory) {
+  if (!is_dir($directory)) {
+    return array();
+  }
+
+  return new RecursiveIteratorIterator(
+           new RecursiveDirectoryIterator($directory),
+           RecursiveIteratorIterator::SELF_FIRST);
 }
