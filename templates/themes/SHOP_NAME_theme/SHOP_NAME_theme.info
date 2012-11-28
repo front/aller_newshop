@@ -1,0 +1,12 @@
+name = {SHOP_NAME}
+description = A sub theme of Aller global theme (which again depends on twitter_bootstrap)
+screenshot = screenshot.png
+core = 7.x
+base theme = aller_global_theme
+
+; Styles
+stylesheets[all][] = styles/style_{SHOP_NAME}.css
+stylesheets[all][] = styles/bootstrap-responsive.css
+
+; Scripts
+scripts[] = scripts/scripts_{SHOP_NAME}.js

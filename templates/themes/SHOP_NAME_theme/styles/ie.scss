@@ -1,0 +1,106 @@
+
+/* IE6-7 */
+.navbar-inner {
+  background-color: #2f2f2f!important;
+}
+
+.icon-white {
+  background-image: url('../images/glyphicons-halflings-white.png')!important;
+}
+.icon-shopping-cart {
+  background-position: -360px -120px!important;
+}
+button i {
+  display: none!important;
+}
+
+#page-header {
+  .block-search-api-page {
+    form {
+      .form-text {
+        color: #555;
+      }
+      button.form-submit {
+        margin-top: 2px;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+.page-sok {
+  .main-content {
+
+    #search-api-page-search-form {
+      .form-submit {
+        margin-top: 1px;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+.view-nodequeue-1 {
+  .carousel-inner {
+    .carousel-caption {
+
+      h4 {
+        background-color: #000;
+        white-space: nowrap;
+      }
+      p {
+        background-color: #ad0160;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.node-type-produktvisning .view-mode-full {
+  .group_details {
+    overflow: hidden;
+
+    .commerce-product-field {
+      float: left;
+    }
+  }
+  .field-name-field-buy-series,
+  .field-name-field-product-ebook-link {
+    float: left;
+  }
+}
+
+.page-taxonomy {
+  .pane-page-title {
+  }
+  .view-authored-products,
+  .view-display-id-taxonomy_pane {
+    .view-filters {
+      label {
+        white-space: nowrap;
+      }
+      .control-label {
+        display: none;
+      }
+      .control-group {
+        float: left;
+
+        .controls {
+          display: inline;
+
+          .control-label {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+  .region-sidebar-first {
+    .item-list ul,
+    ul.facetapi-facetapi-checkbox-links,
+    ul.facetapi-facetapi-links,
+    ul.menu {
+      list-style: none;
+    }
+  }
+}

@@ -1,0 +1,76 @@
+/* IE6-7 */
+.navbar-inner {
+  background-color: #2f2f2f!important;
+}
+
+.icon-white {
+  background-image: url("../images/glyphicons-halflings-white.png") !important;
+}
+
+.icon-shopping-cart {
+  background-position: -360px -120px !important;
+}
+
+button i {
+  display: none!important;
+}
+
+#page-header .block-search-api-page form .form-text {
+  color: #555;
+}
+#page-header .block-search-api-page form button.form-submit {
+  margin-top: 2px;
+  vertical-align: top;
+}
+
+.page-sok .main-content #search-api-page-search-form .form-submit {
+  margin-top: 1px;
+  vertical-align: top;
+}
+
+.view-nodequeue-1 .carousel-inner .carousel-caption h4 {
+  background-color: #000;
+  white-space: nowrap;
+}
+.view-nodequeue-1 .carousel-inner .carousel-caption p {
+  background-color: #ad0160;
+  white-space: nowrap;
+}
+
+.node-type-produktvisning .view-mode-full .group_details {
+  overflow: hidden;
+}
+.node-type-produktvisning .view-mode-full .group_details .commerce-product-field {
+  float: left;
+}
+.node-type-produktvisning .view-mode-full .field-name-field-buy-series,
+.node-type-produktvisning .view-mode-full .field-name-field-product-ebook-link {
+  float: left;
+}
+
+.page-taxonomy .view-authored-products .view-filters label,
+.page-taxonomy .view-display-id-taxonomy_pane .view-filters label {
+  white-space: nowrap;
+}
+.page-taxonomy .view-authored-products .view-filters .control-label,
+.page-taxonomy .view-display-id-taxonomy_pane .view-filters .control-label {
+  display: none;
+}
+.page-taxonomy .view-authored-products .view-filters .control-group,
+.page-taxonomy .view-display-id-taxonomy_pane .view-filters .control-group {
+  float: left;
+}
+.page-taxonomy .view-authored-products .view-filters .control-group .controls,
+.page-taxonomy .view-display-id-taxonomy_pane .view-filters .control-group .controls {
+  display: inline;
+}
+.page-taxonomy .view-authored-products .view-filters .control-group .controls .control-label,
+.page-taxonomy .view-display-id-taxonomy_pane .view-filters .control-group .controls .control-label {
+  display: inline-block;
+}
+.page-taxonomy .region-sidebar-first .item-list ul,
+.page-taxonomy .region-sidebar-first ul.facetapi-facetapi-checkbox-links,
+.page-taxonomy .region-sidebar-first ul.facetapi-facetapi-links,
+.page-taxonomy .region-sidebar-first ul.menu {
+  list-style: none;
+}

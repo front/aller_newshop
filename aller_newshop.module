@@ -28,6 +28,12 @@ function aller_newshop_clone_shop_form($form, &$form_state) {
     '#value' => '/sites'
   );
 
+  $form['variables'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Variables',
+    '#value' => 'SHOP_NAME->aller_newshop'
+  );
+
   $form['themes'] = array(
     '#type' => 'select',
     '#options' => aller_newshop_get_themes(),
@@ -78,6 +84,18 @@ function aller_newshop_clone_shop_form_submit(&$form, &$form_state) {
   define('ALLER_NEWSHOP_DESTINATION', $sites_path);
 
   $variables = array();
+
+  $set_vars = explode("\n", $form_state['input']['variables']);
+
+  foreach ($set_vars as $set_var) {
+    list($key, $value) = explode('->', $set_var);
+    $value = trim($value);
+    $key = strtoupper(trim($key));
+    $variables[$key] = $value;
+  }
+
+  $set_vars = $form_state['input']['variables'];
+
   $variables['SHOP_NAME'] = $form_state['input']['shop_name'];
 
   $themes = array();
@@ -109,7 +127,7 @@ function aller_newshop_get_themes() {
 
   $return = array();
   while (false !== ($entry = readdir($dir))) {
-    if ($entry != '.' && $entry != '..') {
+    if ($entry != '.' && $entry != '..' && strpos($entry, '.') !== 0) {
       $return[] = $entry;
     }
   }
@@ -124,7 +142,7 @@ function aller_newshop_get_modules() {
 
   $return = array();
   while (false !== ($entry = readdir($dir))) {
-    if ($entry != '.' && $entry != '..') {
+    if ($entry != '.' && $entry != '..' && strpos($entry, '.') !== 0) {
       $return[] = $entry;
     }
   }
@@ -139,16 +157,13 @@ function aller_newshop_get_features() {
 
   $return = array();
   while (false !== ($entry = readdir($dir))) {
-    if ($entry != '.' && $entry != '..') {
+    if ($entry != '.' && $entry != '..' && strpos($entry, '.') !== 0) {
       $return[] = $entry;
     }
   }
 
   return $return;
 }
-/*define('ALLER_NEWSHOP_DESTINATION', DRUPAL_ROOT . '/sites/allershop');
-var_dump(aller_newshop_clone_features(array('test_SHOP_NAME'), array('SHOP_NAME' => 'jegger')));
-exit();*/
 
 function aller_newshop_clone_themes($themes, $variables) {
   if (!is_array($themes)) {

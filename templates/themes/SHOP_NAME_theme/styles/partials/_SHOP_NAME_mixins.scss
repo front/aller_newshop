@@ -1,0 +1,264 @@
+/* Common */
+@mixin pane-title {
+  color: #3f3f3f;
+  font-family: $sansFontFamily;
+  font-size: em(18px, 14px);
+  font-weight: bold;
+  text-transform: capitalize;
+  text-shadow: 0 1px 0 #fff;
+  margin: 4px 0;
+  padding-left: 21px;
+  // background: transparent url(../images/icon_pane-title.png) no-repeat left top;
+
+  &:before {
+    display: block;
+    content: '';
+    height: 0;
+    margin: em(21px, 18px) 0 em(-19px, 18px);
+    margin-right: 19px;
+    border-bottom: 1px solid $shadowToneDark;
+    background-color: #000;
+  }
+  span {
+    display: inline-block;
+    background-color: #FFF;
+    padding-right: em(12px, 18px);
+  }
+}
+
+@mixin white-box($gradient: false, $borderradius: true) {
+  padding: 0 0 em(19px, 14px);
+  margin-bottom: em(30px, 14px);
+  background: #fff;
+  border: 1px solid $shadowToneDark;
+  // @include box-shadow(0 3px 2px rgba(0,0,0,0.23));
+
+  @if $gradient == true {
+    @include background-image(linear-gradient(#fff, #f6f4f4));
+  }
+
+  @if $borderradius == true {
+    @include border-radius(2px);
+  }
+}
+
+@mixin paper-shadow {
+  position: relative;
+
+  &:before,
+  &:after {
+    content:"";
+    position:absolute;
+    z-index:-1;
+    bottom:15px;
+    left:10px;
+    width:50%;
+    height:20%;
+    @include box-shadow(0 15px 5px $shadowToneDark);
+    @include rotate(-3deg);
+  }
+
+  &:after {
+    right:10px;
+    left:auto;
+    @include rotate(3deg);
+  }
+}
+
+@mixin book-on-grid {
+  color: #545454;
+  text-align: left;
+  max-width: 170px;
+  margin-left: 25px;
+  margin-bottom: 2.5em;
+  position: relative;
+
+  .commerce-product-field-field-product-image {
+    .thumbnail {
+      display: inline-block;
+      padding: 0;
+      margin-bottom: em(6px, 14px);
+      border: 1px solid #d0cfcf;
+      @include border-radius(1px);
+      @include box-shadow(2px 0px 7px rgba(0,0,0,0.2));
+    }
+  }
+  .field-name-field-badge {
+    @include badge;
+    position: absolute;
+    top: 146px;
+    right: -6px;
+  }
+  h3 {
+    font-family: $altFontFamily;
+    font-size: em(16px, 14px);
+    font-weight: bold;
+    line-height: em(18px, 16px);
+    text-shadow: 0 1px 0 #fff;
+    margin-bottom: 0;
+
+    a {
+      color: #3F3F3F;
+    }
+  }
+  .field-name-field-product-author {
+    margin-bottom: 0;
+
+    a {
+      color: #545454;
+    }
+  }
+  .field-name-field-product-price-before {
+    color: #DF8364;
+    font-size: em(15px, 14px);
+    text-decoration: line-through;
+    float: left;
+  }
+  .field-commerce-price {
+    font-size: em(16px, 14px);
+    font-weight: bold;
+    float: left;
+    clear: both;
+    margin: 0;
+  }
+  .commerce-add-to-cart {
+    float: right;
+    margin: -6px 11px 0 0;
+
+    .form-submit {
+      font-family: $sansFontFamily;
+      font-size: em(16px, 14px);
+      padding: 5px 12px;
+      border-color: #AB0D60 #A40C5C #9D0B59 #AD1667;
+      background-color: #bf016d;
+      @include background-image(linear-gradient(#CD1375, #AC0D60));
+      @include border-radius(7px);
+      @include background-clip(padding-box);
+
+      &:hover {
+        background-position: 0 0;
+        background-color: darken(#bf016d, 5);
+        @include background-image(linear-gradient(darken(#CD1375, 5), darken(#AC0D60, 5)));
+      }
+    }
+  }
+  .commerce-fields-wrapper {
+    position: static;
+  }
+  .commerce-fields {
+    position: relative;
+    overflow: hidden;
+  }
+  .js .commerce-fields {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .form-item-product-id {
+    display: none;
+  }
+}
+
+@mixin book-list {
+  ol, ul {
+    margin: 0;
+    list-style: none;
+  }
+  .views-row {
+    clear: both;
+    padding: em(12px, 14px) em(22px, 14px);
+    overflow: hidden;
+    border-bottom: 1px dashed $shadowToneDark;
+  }
+  .views-row-first {
+    padding-top: 0;
+  }
+  .views-row-last {
+    border: none;
+  }
+  .views-field-counter {
+    color: #000;
+    font-size: em(21px, 13px);
+    font-weight: bold;
+    text-align: left;
+    float: left;
+    width: perc(31px, 324px);
+    margin-top: em(16px, 21px);
+  }
+  .views-field-field-product-image {
+    float: left;
+    margin-right: em(16px, 14px);
+
+    img {
+      display: block;
+      border: 1px solid #b9b8b8;
+    }
+  }
+  .views-field-title {
+    font-size: em(16px, 14px);
+    font-weight: bold;
+    line-height: 1em;
+    letter-spacing: em(0.25pt, 16pt);
+  }
+  .views-field-field-product-author {
+    color: #333;
+    margin: 0;
+  }
+  .views-field-commerce-price {
+    font-weight: bold;
+  }
+  .views-field-view-node {
+    font-size: em(13px, 14px);
+  }
+}
+
+@mixin carousel-pagination {
+  text-align: center;
+  margin: 0 auto;
+  list-style: none;
+  position: relative;
+
+  li {
+    text-indent: 100%;
+    @include background-image(image-url('icon_carousel-pager.png'));
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin: 6px 7px;
+    overflow: hidden;
+
+    &.active {
+      background-position: right top;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+@mixin badge {
+  background: transparent;
+  display: inline-block;
+
+  a, span {
+    display: inline-block;
+    width: 97px;
+    height: 98px;
+    text-indent: 100%;
+    overflow: hidden;
+    background-repeat: no-repeat;
+  }
+  .badge-recommended {
+    @include background-image(image-url('bg_bombe-anbefalt.png'));
+  }
+  .badge-bestseller {
+    @include background-image(image-url('bg_bombe-bestselger.png'));
+  }
+  .badge-new {
+    @include background-image(image-url('bg_bombe-nyhet.png'));
+  }
+  .badge-deal {
+    @include background-image(image-url('bg_bombe-tilbud.png'));
+  }
+}
