@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the {SHOP_NAME} standard front feature.
+ */
+
+include_once('{SHOP_NAME}_frontpage_standard.features.inc');

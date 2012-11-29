@@ -1,0 +1,15 @@
+name = Display blocks
+description = Various blocks and content panes used for listing products. Bestsellers, those who bought also bought etc.
+core = 7.x
+package = Aller
+php = 5.2.4
+version = 7.x-1.0
+project = {SHOP_NAME}_display_blocks
+dependencies[] = ctools
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
+features[views_view][] = most_popular_products
+features[views_view][] = product_display_top_promoted
+features[views_view][] = sidebar_lists_of_books
+features[views_view][] = slideshow_secondary

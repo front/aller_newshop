@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the {SHOP_NAME} display blocks feature.
+ */
+
+include_once '{SHOP_NAME}_display_blocks.features.inc';

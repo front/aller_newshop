@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the {SHOP_NAME} Book product + display feature.
+ */
+
+include_once('{SHOP_NAME}_product_book.features.inc');
