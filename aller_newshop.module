@@ -117,6 +117,9 @@ function aller_newshop_clone_shop_form_submit(&$form, &$form_state) {
   aller_newshop_clone_modules($modules, $variables);
   aller_newshop_clone_features($features, $variables);
 
+  chdir(ALLER_NEWSHOP_DESTINATION);
+  exec('drush en cc all');
+
   drupal_set_message('Shop cloned with success', $type = 'status');
 }
 
@@ -187,6 +190,9 @@ function aller_newshop_clone_themes($themes, $variables) {
     }
 
     aller_newshop_copy_directory($directories['themes'] . '/' . $theme, $destination, $variables);
+
+    chdir(ALLER_NEWSHOP_DESTINATION);
+    exec('drush en ' . $rtheme . ' --yes');
   }
 }
 
@@ -212,6 +218,9 @@ function aller_newshop_clone_modules($modules, $variables) {
     }
 
     aller_newshop_copy_directory($directories['modules'] . '/' . $module, $destination, $variables);
+
+    chdir(ALLER_NEWSHOP_DESTINATION);
+    exec('drush en ' . $rmodule . ' --yes');
   }
 }
 
